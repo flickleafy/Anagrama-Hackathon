@@ -16,8 +16,9 @@ import controle.singlethread.Validacao;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Main
 {
 

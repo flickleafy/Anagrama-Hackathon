@@ -10,8 +10,9 @@ import java.util.Objects;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Colecoes
 {
     // Separa uma lista de palavras simples em listas menores, 

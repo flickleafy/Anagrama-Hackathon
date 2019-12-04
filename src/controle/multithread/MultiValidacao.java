@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class MultiValidacao implements Runnable
 {
     private ArrayList<String> listaPalavras;

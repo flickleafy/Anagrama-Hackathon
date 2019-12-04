@@ -11,8 +11,9 @@ import java.util.HashMap;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class MultiCombinador implements Runnable
 {
     private ArrayList<String> listaPalavrasCombinadas;

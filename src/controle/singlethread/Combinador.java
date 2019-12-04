@@ -10,8 +10,9 @@ import java.util.HashMap;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Combinador
 {
 

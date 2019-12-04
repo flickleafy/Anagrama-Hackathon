@@ -9,6 +9,7 @@ package anagrama;
  *
  * @author Enzo Erbano
  */
+
 public class Anagrama
 {
     public static boolean checarAnagrama(String str1, String str2)  

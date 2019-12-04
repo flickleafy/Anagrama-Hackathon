@@ -11,8 +11,9 @@ import java.util.Objects;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class MultiFiltro implements Runnable
 {
     private ArrayList<String> listaPalavras;

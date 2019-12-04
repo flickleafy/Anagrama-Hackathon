@@ -13,8 +13,9 @@ import util.io.LerArquivo;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Entrada
 {
 

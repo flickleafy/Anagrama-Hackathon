@@ -7,18 +7,18 @@ package anagrama;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Anagrama
 {
     public static boolean checarAnagrama(String str1, String str2)  
-    {  
+    {      
         // Caso tenha tamanhos diferentes, retornar falso  
-        /*if (str1.length() != str2.length())  
+        if (str1.length() != str2.length())  
         {  
             return false;  
-        }*/
-        
+        }
         // Calcula valor de XOR
         int acumulador = 0;  
 

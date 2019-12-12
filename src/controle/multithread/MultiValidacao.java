@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class MultiValidacao implements Runnable
 {
     private ArrayList<String> listaPalavras;
@@ -20,15 +21,17 @@ public class MultiValidacao implements Runnable
     public static void validarAnagramasEmListas(ArrayList<String> listaPalavrasCombinadas, String stringEntrada)
     {
         String stringTmp = stringEntrada.replaceAll("\\s+", "");
-        
+        long c= 0;
         for (int j = 0; j < listaPalavrasCombinadas.size(); j++)
         {
             String palavra = listaPalavrasCombinadas.get(j);
             if (Anagrama.checarAnagrama(stringTmp, palavra))
             {
-                System.out.println("A palavra \u00e9 um anagrama : " + palavra);
+                c++;
+                //System.out.println("A palavra \u00e9 um anagrama : " + palavra);
             }
         }
+        System.out.println("Anagramas "+c);
     }
     
 

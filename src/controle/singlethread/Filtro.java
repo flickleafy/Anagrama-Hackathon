@@ -6,12 +6,12 @@
 package controle.singlethread;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
  *
- * @author Enzo Erbano
+ * @author Enzo Erbano 
  */
 
 public class Filtro
@@ -19,7 +19,7 @@ public class Filtro
 
     public static ArrayList<String> eliminarPalavrasEmLista(ArrayList<String> listaPalavras, String stringEntrada)
     {
-        HashMap<Character, Integer> mapaCaracterePalavraRef = mapearPalavra(stringEntrada);
+        HashSet<Character> mapaCaracterePalavraRef = mapearPalavra(stringEntrada);
 
         for (int j = 0; j < listaPalavras.size(); j++)
         {
@@ -34,9 +34,9 @@ public class Filtro
         return listaPalavras;
     }
 
-    public static ArrayList<ArrayList> eliminarPalavrasEmColecoes(ArrayList<ArrayList> colecoesPalavras, String stringEntrada)
+    private ArrayList<ArrayList> eliminarPalavrasEmColecoes(ArrayList<ArrayList> colecoesPalavras, String stringEntrada)
     {
-        HashMap<Character, Integer> mapaCaracterePalavraRef = mapearPalavra(stringEntrada);
+        HashSet<Character> mapaCaracterePalavraRef = mapearPalavra(stringEntrada);
 
         for (int i = 0; i < colecoesPalavras.size(); i++)
         {
@@ -60,52 +60,32 @@ public class Filtro
         return colecoesPalavras;
     }
 
-    private static HashMap<Character, Integer> mapearPalavra(String stringEntrada)
+    private static HashSet<Character> mapearPalavra(String stringEntrada)
     {
         // Cria HashMap contendo caractere como chave e ocorrencias como valor
-        HashMap<Character, Integer> mapaCaractere = new HashMap<Character, Integer>();
+        HashSet<Character> mapaCaractere = new HashSet<>();
         // Converte string em vetor de caractere
         char[] strVetor = stringEntrada.toCharArray();
         // mapear caracteres em vetor
         for (char charactere : strVetor)
         {
-            if (mapaCaractere.containsKey(charactere))
-            {
-                // Se presente em Hashmap incrementa 1
-                //mapaCaractere.put(charactere, mapaCaractere.get(charactere) + 1);
-            }
-            else
-            {
-                // Não presente, adiciona caractere com contagem 1
-                mapaCaractere.put(charactere, 1);
-            }
+            mapaCaractere.add(charactere);
         }
         return mapaCaractere;
     }
 
-    private static boolean checarCaracteresEmMapaRef(String palavra, HashMap<Character, Integer> mapaCaracterePalavraRef)
+    private static boolean checarCaracteresEmMapaRef(String palavra, HashSet<Character> mapaCaracterePalavraRef)
     {
         char[] strVetor = palavra.toCharArray();
         // mapear caracteres em array
-        int contem = 0;
-        int naocontem = 0;
         // checar se palavra da coleção contém todas as letras que a referencia
         for (char charactere : strVetor)
         {
-            if (mapaCaracterePalavraRef.containsKey(charactere))
+            if (!mapaCaracterePalavraRef.contains(charactere))
             {
-                contem++;
-            }
-            else
-            {
-                //naocontem++;
                 return false;
             }
         }
-        /*if (naocontem > 0)
-        {
-            return false;
-        }*/
         return true;
     }
 

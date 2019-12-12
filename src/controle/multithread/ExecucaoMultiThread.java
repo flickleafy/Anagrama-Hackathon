@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Enzo Erbano
+ * @author Enzo Erbano 
  */
 
 public class ExecucaoMultiThread
@@ -30,14 +30,25 @@ public class ExecucaoMultiThread
     
     static void executarMultiCombinacoes(ArrayList<String> listaPalavrasCombinadas,ArrayList<ArrayList> colecoesListas, String stringEntrada,SetCombinacoes setCombinacoesManopla,ArrayList<ArrayList> colecoesDeSets ,int numeroDeThreads)
     {
+        ArrayList<ArrayList> listasPalavrasPorThread = new ArrayList<>();
         ArrayList<Thread> threadsArray = new ArrayList<>();
+        
         for (int i = 0; i < numeroDeThreads; i++)
         {
-            Thread thread = new Thread(new MultiCombinador(listaPalavrasCombinadas,colecoesListas, stringEntrada,setCombinacoesManopla, colecoesDeSets.get(i)));
+            ArrayList<String> listaPalavrasComb = new ArrayList<>();
+            Thread thread = new Thread(new MultiCombinador(listaPalavrasComb,colecoesListas, stringEntrada,setCombinacoesManopla, colecoesDeSets.get(i)));
             threadsArray.add(thread);
             thread.start();
+            listasPalavrasPorThread.add(listaPalavrasComb);
         }
+        
         juntarThreads(threadsArray);
+        
+        for (int i = 0; i < numeroDeThreads; i++)
+        {
+            listaPalavrasCombinadas.addAll(listasPalavrasPorThread.get(i));
+        }
+        System.out.println("Total de combinações " + listaPalavrasCombinadas.size());
     }    
     
     static void executarMultiValidacao(ArrayList<ArrayList> colecoesListas, String stringEntrada, int numeroDeThreads)
@@ -74,10 +85,14 @@ public class ExecucaoMultiThread
     public static int definirNumeroDeThreads(int tamanhoArrayList)
     {
         int numeroDeThreads = Runtime.getRuntime().availableProcessors();
-        if (tamanhoArrayList < numeroDeThreads)
+        if (tamanhoArrayList < numeroDeThreads*2)
         {
             numeroDeThreads = tamanhoArrayList;
         }
+        //else if (tamanhoArrayList < numeroDeThreads*2 )
+        //{
+            //numeroDeThreads = tamanhoArrayList/2;
+        //}
         return numeroDeThreads;
     }
 

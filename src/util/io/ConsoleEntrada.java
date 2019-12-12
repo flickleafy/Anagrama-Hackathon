@@ -9,8 +9,9 @@ import java.util.Scanner;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class ConsoleEntrada
 {
     Scanner scanner;

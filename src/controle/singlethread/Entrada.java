@@ -22,7 +22,7 @@ public class Entrada
     public static String lerEntradaConsole(ConsoleEntrada consoleManopla)
     {
         System.out.println("Digite uma palavra ou frase : ");
-        String stringEntrada = "eugostodebanana";//consoleManopla.lerConsoleUmaLinha(); //"o rei de roma roeu a"
+        String stringEntrada = consoleManopla.lerConsoleUmaLinha(); //"o rei de roma roeu a"
         stringEntrada = stringEntrada.toUpperCase();
         return stringEntrada;
     }
@@ -30,7 +30,7 @@ public class Entrada
     public static ArrayList<String> lerArquivoConsole(ConsoleEntrada consoleManopla)
     {
         System.out.println("Digite o diret\u00f3rio e nome do dicionario : ");
-        String diretorio =  "C:\\Users\\xxx\\Desktop\\Anagrama\\[dicionario]\\palavras.82eebac6.txt";//consoleManopla.lerConsoleUmaLinha();
+        String diretorio =  consoleManopla.lerConsoleUmaLinha();
         LerArquivo arquivo = new LerArquivo();
         ArrayList<String> listaString = new ArrayList<>();
         listaString = arquivo.lerArquivoLinhaPorLinha(diretorio);

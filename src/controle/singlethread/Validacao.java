@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Validacao
 {
 
@@ -32,17 +33,38 @@ public class Validacao
         }
     }
 
-    public static void validarAnagramasEmListas(ArrayList<String> listaPalavrasCombinadas, String stringEntrada)
+    /*public static void validarAnagramasEmListas(ArrayList<String> listaPalavrasCombinadas, String stringEntrada)
     {
-        String stringTmp = stringEntrada.replaceAll("\\s+", "");
+        String stringTmp = stringEntrada.replaceAll("\\s+", "");        
+        ArrayList<String> arrayAnagramas = new ArrayList<>();
         
         for (int j = 0; j < listaPalavrasCombinadas.size(); j++)
         {
             String palavra = listaPalavrasCombinadas.get(j);
             if (Anagrama.checarAnagrama(stringTmp, palavra))
             {
-                System.out.println("A palavra \u00e9 um anagrama : " + palavra);
+                arrayAnagramas.add(palavra+"\n");                        
+                //System.out.println("A palavra \u00e9 um anagrama : " + palavra);
+            }
+        }        
+        System.out.println("Anagramas "+ arrayAnagramas.size());
+        System.out.println(arrayAnagramas.toString());
+    }*/
+    
+    public static void validarAnagramasEmListas(ArrayList<String> listaPalavrasCombinadas, String stringEntrada)
+    {
+        String stringTmp = stringEntrada.replaceAll("\\s+", "");
+        long c= 0;
+        for (int j = 0; j < listaPalavrasCombinadas.size(); j++)
+        {
+            String palavra = listaPalavrasCombinadas.get(j);
+            if (Anagrama.checarAnagrama(stringTmp, palavra))
+            {
+                c++;
+                //System.out.println("A palavra \u00e9 um anagrama : " + palavra);
             }
         }
+        System.out.println("Anagramas "+c);
     }
+    
 }

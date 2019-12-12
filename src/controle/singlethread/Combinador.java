@@ -146,3 +146,4 @@ public class Combinador
         }
         return listaPalavrasCombinadas;
     }*/
+

@@ -10,12 +10,13 @@ import java.util.HashMap;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Combinador
 {
 
-    public static ArrayList<String> combinadorPalavras(ArrayList<String> listaPalavrasCombinadas,ArrayList<ArrayList> colecoesPalavras, String stringEntrada, SetCombinacoes setCombinacoesManopla)
+    public static void combinadorPalavras(ArrayList<String> listaPalavrasCombinadas,ArrayList<ArrayList> colecoesPalavras, String stringEntrada, SetCombinacoes setCombinacoesManopla)
     {
         ArrayList<ArrayList> listaDeSetCombinacoes = setCombinacoesManopla.getListaDeSetCombinacoes();        
         HashMap<Integer, Integer> mapaListasPalavrasEmArray = setCombinacoesManopla.getMapaListasPalavrasEmArray();
@@ -29,8 +30,8 @@ public class Combinador
             listaPalavrasCombinadas.addAll( combinadorRecursivo(colecoesPalavras, setCombinacoes, mapaListasPalavrasEmArray) );
             
         }
+        System.out.println("Total de combinações " + listaPalavrasCombinadas.size());
         
-        return listaPalavrasCombinadas;
     }
 
     

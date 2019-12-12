@@ -10,14 +10,15 @@ import controle.singlethread.Entrada;
 import util.io.ConsoleEntrada;
 import java.util.ArrayList;
 import controle.multithread.ControleMultiThread;
-import controle.singlethread.Combinador;
+import controle.singlethread.Filtro;
 import controle.singlethread.SetCombinacoes;
 import controle.singlethread.Validacao;
 
 /**
  *
- * @author xxx
+ * @author Enzo Erbano
  */
+
 public class Main
 {
 
@@ -40,8 +41,8 @@ public class Main
 
         // Filtro de palavras
         
-        //listaPalavras = Filtro.eliminarPalavrasEmLista(listaPalavras, stringEntrada); //single-thread        
-        listaPalavras = ControleMultiThread.controlarMultiFiltroLista(listaPalavras, stringEntrada);  //multi-thread
+        listaPalavras = Filtro.eliminarPalavrasEmLista(listaPalavras, stringEntrada); //single-thread        
+        //listaPalavras = ControleMultiThread.controlarMultiFiltroLista(listaPalavras, stringEntrada);  //multi-thread
 
         // Divisão em coleçoes por tamanho de palavra
         
@@ -55,8 +56,8 @@ public class Main
         
         ArrayList<String> listaPalavrasCombinadas = new ArrayList<>();
         
-        Combinador.combinadorPalavras(listaPalavrasCombinadas, colecoesPalavras, stringEntrada, setCombinacoesManopla); //single-thread        
-        //ControleMultiThread.controlarMultiCombinacoesLista(listaPalavrasCombinadas,colecoesPalavras, stringEntrada, setCombinacoesManopla);  //multi-thread
+        //Combinador.combinadorPalavras(listaPalavrasCombinadas, colecoesPalavras, stringEntrada, setCombinacoesManopla); //single-thread        
+        ControleMultiThread.controlarMultiCombinacoesLista(listaPalavrasCombinadas,colecoesPalavras, stringEntrada, setCombinacoesManopla);  //multi-thread
 
         // Validação de anagramas encontrados
         

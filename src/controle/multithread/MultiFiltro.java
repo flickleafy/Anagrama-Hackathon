@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Enzo Erbano
+ * @author Enzo Erbano 
  */
 
 public class MultiFiltro implements Runnable

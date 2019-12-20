@@ -1,8 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2019 Enzo Erbano
+ *
+ * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+ *  
+ * You are free to:
+ * 
+ * Share - copy and redistribute the material in any medium or format
+ * Adapt - remix, transform, and build upon the material
+ * 
+ * Under the following terms:
+ * 
+ * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
+ * changes were made. You may do so in any reasonable manner, but not in any way that
+ * suggests the licensor endorses you or your use.
+ * NonCommercial - You may not use the material for commercial purposes.
+ * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
+ * contributions under the same license as the original.
+ * No additional restrictions - You may not apply legal terms or technological measures that
+ * legally restrict others from doing anything the license permits.
+ * 
  */
+
 package controle.singlethread;
 
 import java.util.ArrayList;
@@ -13,7 +31,7 @@ import util.io.LerArquivo;
 
 /**
  *
- * @author Enzo Erbano 
+ * @author Enzo Erbano
  */
 
 public class Entrada
@@ -22,7 +40,7 @@ public class Entrada
     public static String lerEntradaConsole(ConsoleEntrada consoleManopla)
     {
         System.out.println("Digite uma palavra ou frase : ");
-        String stringEntrada = consoleManopla.lerConsoleUmaLinha(); //"o rei de roma roeu a"
+        String stringEntrada = "eugostodebanana";//consoleManopla.lerConsoleUmaLinha(); //"o rei de roma roeu a"
         stringEntrada = stringEntrada.toUpperCase();
         return stringEntrada;
     }
@@ -30,7 +48,7 @@ public class Entrada
     public static ArrayList<String> lerArquivoConsole(ConsoleEntrada consoleManopla)
     {
         System.out.println("Digite o diret\u00f3rio e nome do dicionario : ");
-        String diretorio =  consoleManopla.lerConsoleUmaLinha();
+        String diretorio =  "C:\\Users\\xxx\\Desktop\\Anagrama\\[dicionario]\\palavras.82eebac6.txt";//consoleManopla.lerConsoleUmaLinha();
         LerArquivo arquivo = new LerArquivo();
         ArrayList<String> listaString = new ArrayList<>();
         listaString = arquivo.lerArquivoLinhaPorLinha(diretorio);

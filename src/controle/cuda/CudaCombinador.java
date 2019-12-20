@@ -3,20 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package util.time;
-
-import java.util.concurrent.TimeUnit;
+package controle.cuda;
 
 /**
  *
  * @author Enzo Erbano
  */
-public class Timer
-{
 
-    public static long nanoTomilisec(long elapsedTime)
-    {
-        return TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-    }
+public class CudaCombinador
+{
     
 }

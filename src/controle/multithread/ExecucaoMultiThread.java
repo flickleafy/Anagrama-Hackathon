@@ -48,7 +48,7 @@ public class ExecucaoMultiThread
         {
             listaPalavrasCombinadas.addAll(listasPalavrasPorThread.get(i));
         }
-        System.out.println("Total de combinações " + listaPalavrasCombinadas.size());
+        System.out.println("\nTotal de combinações " + listaPalavrasCombinadas.size());
     }    
     
     static void executarMultiValidacao(ArrayList<ArrayList> colecoesListas, String stringEntrada, int numeroDeThreads)

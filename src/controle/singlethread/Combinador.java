@@ -64,6 +64,7 @@ public class Combinador
     }
     
 }
+<<<<<<< Updated upstream
 
 
 /*          switch (setCombinacoes.size())
@@ -146,3 +147,5 @@ public class Combinador
         }
         return listaPalavrasCombinadas;
     }*/
+=======
+>>>>>>> Stashed changes

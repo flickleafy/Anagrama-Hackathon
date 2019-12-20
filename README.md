@@ -65,11 +65,21 @@ A estrutura da aplicação foi escolhida para ser assim, dividida em várias eta
 4.	Otimizações como o multithreads (paralelismo), exige que a seção que será executada paralelamente tenha a menor quantidade de dependências possíveis. Outro tipo de otimização, como a vetorização, funciona em cima do mesmo princípio.
 
 ## Tempo de execução do código
-O código atual tem tempo de execução de aproximadamente 10 segundos, para uma palavra/frase de entrada de 15 letras, e um dicionário de 24.853 palavras. Entradas com menos letras levam em torno de 1 a 2 segundos, variando de caso a caso, de acordo com o tipo de entrada.
+O código atual tem tempo de execução de aproximadamente 10 segundos, para uma palavra/frase de entrada de 15 letras (esse tempo pode variar muito dependendo da entrada, podendo chegar a 50 e poucos segundos), e um dicionário de 24.853 palavras. Entradas com menos letras levam em torno de 1 a 2 segundos, variando de caso a caso, de acordo com o tipo de entrada.
+
+### Testes de desempenho
+![Imagem Teste](https://github.com/eerbano/Anagrama-Hackathon/blob/master/Temporiza%C3%A7%C3%A3o.png)
+
+No teste de desempenho da última versão que fiz (19-12-19) depois de analisar o benchmark, é fácil notar que o problema de desempenho se concentra todo no método que combina palavras. Para otimizar mais o que pode ser feito é converter palavras em números, e processar o vetor usando CUDA. 
+
+Algumas pesquisas feitas mostram experimentos de combinações usando uma GPU atual, onde o processamento no CPU é 10 segundos, na GPU leva em torno de 600 milisegundos.
 
 ## Considerações sobre multithreads
-Apesar que a versão atual tem alguns códigos que fazem uso de multithreads com intenção paralelizar a execução dos módulos o máximo possível entre núcleos de processamento disponíveis no computador em que a aplicação será executada, o modelo Fork-Join atual, e as estruturas de dados usadas aparentemente não são adequadas para tirar o máximo de proveito do paralelismo.
+Apesar que a versão atual tem alguns códigos que fazem uso de multithreads para paralelizar a execução dos módulos o máximo possível entre núcleos de processamento disponíveis no computador em que a aplicação será executada, o modelo Fork-Join atual, e as estruturas de dados usadas aparentemente não são adequadas para tirar o máximo de proveito do paralelismo.
 
-Foi percebido que existe uma boa quantidade de “overhead”, que está ocasionando perda de desempenho. Não tive tempo suficiente para encontrar outro modelo de paralelismo que não apresentasse overhead para a situação atual do código. 
+Foi percebido que existe uma boa quantidade de “overhead”, que está ocasionando perda de desempenho. Não tive tempo suficiente para encontrar outro modelo de paralelismo que não apresentasse overhead para a situação atual do código. Apesar disso, existe boas possibilidades de o código poder ser bastante otimizado para aproveitar o máximo de paralelismo.
 
-Mas, apesar disso, existe boas possibilidades de o código poder ser otimizado para aproveitar o máximo de paralelismo que o computador puder oferecer, já que ele usa API do Java que verifica quantos núcleos de processamento o CPU tem, e particiona a estrutura de dados para tirar proveito de todos os núcleos.
+## Para fazer
+Depois dos últimos testes (19-12-19), vou fazer as seguintes otimizações na próxima versão:
+1.	Conversão de lista de palavras para vetor de números
+2.	Processamento da combinação do vetor de números em CUDA

@@ -1,8 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2019 Enzo Erbano
+ *
+ * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+ *  
+ * You are free to:
+ * 
+ * Share - copy and redistribute the material in any medium or format
+ * Adapt - remix, transform, and build upon the material
+ * 
+ * Under the following terms:
+ * 
+ * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
+ * changes were made. You may do so in any reasonable manner, but not in any way that
+ * suggests the licensor endorses you or your use.
+ * NonCommercial - You may not use the material for commercial purposes.
+ * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
+ * contributions under the same license as the original.
+ * No additional restrictions - You may not apply legal terms or technological measures that
+ * legally restrict others from doing anything the license permits.
+ * 
  */
+
 package controle.singlethread;
 
 import java.util.ArrayList;
@@ -64,85 +82,3 @@ public class Combinador
     }
     
 }
-
-
-/*          switch (setCombinacoes.size())
-            {
-                case 1:
-                    // 1 palavra
-                    listaPalavrasCombinadas.addAll( combinadorColecaoUmaPalavra(colecoesPalavras, setCombinacoes, mapaListasPalavrasEmArray) );
-                    break;
-                case 2:
-                    // 2 palavras
-                    listaPalavrasCombinadas.addAll( combinadorColecaoDuasPalavras(colecoesPalavras, setCombinacoes, mapaListasPalavrasEmArray) );
-                    break;
-                case 3:
-                    // 3 palavras
-                    listaPalavrasCombinadas.addAll( combinadorColecaoTresPalavras(colecoesPalavras, setCombinacoes, mapaListasPalavrasEmArray) );
-                    break;
-                default:                    
-                    break;
-            }      
-
-
-    private static ArrayList<String> combinadorColecaoUmaPalavra(ArrayList<ArrayList> colecoesPalavras, ArrayList<Integer> setCombinacoes, HashMap<Integer, Integer> mapaListasPalavrasEmArray)
-    {
-        ArrayList<String> listaPalavrasCombinadas = new ArrayList<>();
-        
-        int tamanhoPalavra1 = setCombinacoes.get(0);
-        int posicaoLista1 = mapaListasPalavrasEmArray.get(tamanhoPalavra1);
-        ArrayList<String> tmpListaPalavras1 = colecoesPalavras.get(posicaoLista1);
-        
-        for (int i = 0; i < tmpListaPalavras1.size(); i++)
-        {
-            listaPalavrasCombinadas.add(tmpListaPalavras1.get(i));
-        }
-        
-        return listaPalavrasCombinadas;
-    }
-
-    private static ArrayList<String> combinadorColecaoDuasPalavras(ArrayList<ArrayList> colecoesPalavras, ArrayList<Integer> setCombinacoes, HashMap<Integer, Integer> mapaListasPalavrasEmArray)
-    {
-        ArrayList<String> listaPalavrasCombinadas = new ArrayList<>();
-        int tamanhoPalavra1 = setCombinacoes.get(0);
-        int tamanhoPalavra2 = setCombinacoes.get(1);
-        int posicaoLista1 = mapaListasPalavrasEmArray.get(tamanhoPalavra1);
-        int posicaoLista2 = mapaListasPalavrasEmArray.get(tamanhoPalavra2);
-        ArrayList<String> tmpListaPalavras1 = colecoesPalavras.get(posicaoLista1);
-        ArrayList<String> tmpListaPalavras2 = colecoesPalavras.get(posicaoLista2);
-        for (int i = 0; i < tmpListaPalavras1.size(); i++)
-        {
-            for (int j = 0; j < tmpListaPalavras2.size(); j++)
-            {
-                String palavraCombinada = tmpListaPalavras1.get(i) + tmpListaPalavras2.get(j);
-                listaPalavrasCombinadas.add(palavraCombinada);
-            }
-        }
-        return listaPalavrasCombinadas;
-    }
-    
-    private static ArrayList<String> combinadorColecaoTresPalavras(ArrayList<ArrayList> colecoesPalavras, ArrayList<Integer> setCombinacoes, HashMap<Integer, Integer> mapaListasPalavrasEmArray)
-    {
-        ArrayList<String> listaPalavrasCombinadas = new ArrayList<>();
-        int tamanhoPalavra1 = setCombinacoes.get(0);
-        int tamanhoPalavra2 = setCombinacoes.get(1);
-        int tamanhoPalavra3 = setCombinacoes.get(2);
-        int posicaoLista1 = mapaListasPalavrasEmArray.get(tamanhoPalavra1);
-        int posicaoLista2 = mapaListasPalavrasEmArray.get(tamanhoPalavra2);
-        int posicaoLista3 = mapaListasPalavrasEmArray.get(tamanhoPalavra3);
-        ArrayList<String> tmpListaPalavras1 = colecoesPalavras.get(posicaoLista1);
-        ArrayList<String> tmpListaPalavras2 = colecoesPalavras.get(posicaoLista2);
-        ArrayList<String> tmpListaPalavras3 = colecoesPalavras.get(posicaoLista3);
-        for (int i = 0; i < tmpListaPalavras1.size(); i++)
-        {
-            for (int j = 0; j < tmpListaPalavras2.size(); j++)
-            {
-                for (int k = 0; k < tmpListaPalavras3.size(); k++)
-                {
-                    String palavraCombinada = tmpListaPalavras1.get(i) + tmpListaPalavras2.get(j) + tmpListaPalavras3.get(k);
-                    listaPalavrasCombinadas.add(palavraCombinada);
-                }
-            }
-        }
-        return listaPalavrasCombinadas;
-    }*/

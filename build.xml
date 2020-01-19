@@ -10,6 +10,80 @@
 <project name="Anagrama" default="default" basedir=".">
     <description>Builds, tests, and runs the project Anagrama.</description>
     <import file="nbproject/build-impl.xml"/>
+
+    <target name="-post-compile">
+        <copy todir="${build.classes.dir}/res">
+            <fileset dir="res"/>
+        </copy>
+    </target>
+
+    <target name="compile-tests" depends="compile">
+        <mkdir dir="${build.test.classes.dir}"/>
+        <javac srcdir="${test.src.dir}"
+               destdir="${build.test.classes.dir}"
+               source="${javac.source}"
+               target="${javac.target}"
+               encoding="${source.encoding}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${run.classpath}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="compile-unit-tests" depends="compile-tests"/>
+
+    <target name="-init-custom-test-runner">
+        <macrodef name="executar-suite">
+            <attribute name="classe"/>
+            <attribute name="cuda" default="false"/>
+            <sequential>
+                <java classname="@{classe}" fork="true" failonerror="true">
+                    <jvmarg value="-ea"/>
+                    <sysproperty key="anagrama.performance.cuda" value="@{cuda}"/>
+                    <classpath>
+                        <pathelement location="${build.test.classes.dir}"/>
+                        <pathelement path="${run.classpath}"/>
+                        <pathelement location="${basedir}"/>
+                    </classpath>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="test-unit"
+            depends="compile-tests,-init-custom-test-runner"
+            description="Executa somente os testes unitários.">
+        <executar-suite classe="testes.UnitTests"/>
+    </target>
+
+    <target name="test-integration"
+            depends="compile-tests,-init-custom-test-runner"
+            description="Executa somente os testes de integração.">
+        <executar-suite classe="integration.IntegrationTests"/>
+    </target>
+
+    <target name="test"
+            depends="compile-tests,-init-custom-test-runner"
+            description="Executa as suítes rotineiras unitária e de integração.">
+        <executar-suite classe="testes.AllTests"/>
+    </target>
+
+    <target name="test-performance"
+            depends="compile-tests,-init-custom-test-runner"
+            description="Executa os benchmarks independentes de GPU.">
+        <executar-suite classe="performance.PerformanceTests"/>
+    </target>
+
+    <target name="test-performance-cuda"
+            depends="compile-tests,-init-custom-test-runner"
+            description="Executa os benchmarks e exige CUDA nativo.">
+        <executar-suite classe="performance.PerformanceTests" cuda="true"/>
+    </target>
+
+    <target name="test-all"
+            depends="test,test-performance"
+            description="Executa testes rotineiros e benchmarks independentes de GPU."/>
     <!--
 
     There exist several targets which are by default empty and which can be 

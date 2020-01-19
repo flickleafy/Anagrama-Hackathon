@@ -2,114 +2,143 @@
  * Copyright (C) 2019 Enzo Erbano
  *
  * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- *  
- * You are free to:
- * 
- * Share - copy and redistribute the material in any medium or format
- * Adapt - remix, transform, and build upon the material
- * 
- * Under the following terms:
- * 
- * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
- * changes were made. You may do so in any reasonable manner, but not in any way that
- * suggests the licensor endorses you or your use.
- * NonCommercial - You may not use the material for commercial purposes.
- * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
- * contributions under the same license as the original.
- * No additional restrictions - You may not apply legal terms or technological measures that
- * legally restrict others from doing anything the license permits.
- * 
  */
-
 package controle.singlethread;
 
+import anagrama.Anagrama;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
+ * Cria os planos de comprimentos disponíveis para uma expressão-alvo.
  *
- * @author Enzo Erbano 
+ * @author Enzo Erbano
  */
-
-public class SetCombinacoes
+public final class SetCombinacoes
 {
-    static ArrayList<ArrayList> listaDeSetCombinacoes = new ArrayList<>();
-    static HashMap<Integer, Integer> mapaListasPalavrasEmArray = new HashMap<>();
-    
-    static void combinaRecursiva(ArrayList<Integer> numeros, int total, ArrayList<Integer> parcial)
+    private final ArrayList<ArrayList<Integer>> listaDeSetCombinacoes;
+    private final HashMap<Integer, Integer> mapaListasPalavrasEmArray;
+
+    /**
+     * Cria os planos cuja soma corresponde ao comprimento normalizado da
+     * entrada.
+     *
+     * @param stringEntrada expressão que define o comprimento total
+     * @param colecoesPalavras palavras previamente agrupadas por comprimento
+     * @return conjunto independente de planos e do mapa de coleções
+     * @throws IllegalArgumentException se a expressão contiver caracteres
+     *         inválidos
+     */
+    public static SetCombinacoes criarSetDeCombinacoes(
+            String stringEntrada, ArrayList<ArrayList<String>> colecoesPalavras)
     {
-        int somatoria = 0;
-        
-        for (int x : parcial)
+        String entradaNormalizada = Anagrama.normalizar(stringEntrada);
+        if (entradaNormalizada == null)
         {
-            somatoria += x;
+            throw new IllegalArgumentException("A entrada contém caracteres inválidos");
         }
-        
-        if (somatoria == total)
+        return new SetCombinacoes(entradaNormalizada.length(), colecoesPalavras);
+    }
+
+    /**
+     * Gera combinações com repetição dos comprimentos disponíveis.
+     *
+     * @param comprimentoExpressao quantidade total de letras do alvo
+     * @param colecoesPalavras uma coleção não vazia para cada comprimento
+     */
+    public SetCombinacoes(
+            int comprimentoExpressao, ArrayList<ArrayList<String>> colecoesPalavras)
+    {
+        listaDeSetCombinacoes = new ArrayList<>();
+        mapaListasPalavrasEmArray = new HashMap<>();
+
+        ArrayList<Integer> comprimentosDisponiveis = new ArrayList<>();
+        for (int i = 0; i < colecoesPalavras.size(); i++)
         {
-            System.out.println("combinações(" + Arrays.toString(parcial.toArray()) + ")=" + total);
-            listaDeSetCombinacoes.add(parcial);
+            ArrayList<String> colecao = colecoesPalavras.get(i);
+            if (colecao == null || colecao.isEmpty())
+            {
+                continue;
+            }
+
+            String palavraNormalizada = Anagrama.normalizar(colecao.get(0));
+            if (palavraNormalizada == null || palavraNormalizada.isEmpty())
+            {
+                continue;
+            }
+
+            int comprimento = palavraNormalizada.length();
+            mapaListasPalavrasEmArray.put(comprimento, i);
+            comprimentosDisponiveis.add(comprimento);
         }
-        if (somatoria >= total)
+        Collections.sort(comprimentosDisponiveis);
+
+        if (comprimentoExpressao > 0)
         {
+            combinarRecursivamente(
+                    comprimentosDisponiveis,
+                    comprimentoExpressao,
+                    0,
+                    0,
+                    new ArrayList<Integer>());
+        }
+    }
+
+    private void combinarRecursivamente(
+            ArrayList<Integer> comprimentos,
+            int total,
+            int indiceInicial,
+            int soma,
+            ArrayList<Integer> parcial)
+    {
+        if (soma == total)
+        {
+            listaDeSetCombinacoes.add(new ArrayList<>(parcial));
             return;
         }
-        
-        for (int i = 0; i < numeros.size(); i++)
+
+        for (int i = indiceInicial; i < comprimentos.size(); i++)
         {
-            ArrayList<Integer> numerosRestantes = new ArrayList<>();
-            int num = numeros.get(i);
-            
-            for (int j = i + 1; j < numeros.size(); j++)
+            int comprimento = comprimentos.get(i);
+            // Como os comprimentos estão ordenados, os próximos também
+            // excederiam o total e todo esse ramo pode ser descartado.
+            if (soma + comprimento > total)
             {
-                numerosRestantes.add(numeros.get(j));
+                break;
             }
-            
-            ArrayList<Integer> somaParcial = new ArrayList<>(parcial);
-            somaParcial.add(num);
-            combinaRecursiva(numerosRestantes, total, somaParcial);
+
+            parcial.add(comprimento);
+            // Reutilizar o mesmo índice permite planos como 3+3. Não voltar
+            // aos índices anteriores evita gerar as permutações 2+3 e 3+2.
+            combinarRecursivamente(
+                    comprimentos, total, i, soma + comprimento, parcial);
+            parcial.remove(parcial.size() - 1);
         }
-        
     }
 
-    static void combina(ArrayList<Integer> numbers, int target)
+    /**
+     * Retorna uma cópia profunda dos planos gerados.
+     *
+     * @return planos que podem ser alterados sem afetar esta instância
+     */
+    public ArrayList<ArrayList<Integer>> getListaDeSetCombinacoes()
     {
-        combinaRecursiva(numbers, target, new ArrayList<>());        
-    }
-
-    public static SetCombinacoes criarSetDeCombinacoes(String stringEntrada, ArrayList<ArrayList> colecoesPalavras)
-    {
-        String stringTmp = stringEntrada.replaceAll("\\s+", "");
-        int comprimento = stringTmp.length();
-        SetCombinacoes setCombinacoesManopla = new SetCombinacoes(comprimento, colecoesPalavras);
-        return setCombinacoesManopla;
-    }
-
-    public SetCombinacoes(int comprimentoExpressao, ArrayList<ArrayList> colecoesPalavras)
-    {
-        ArrayList<Integer> comprimentosDisponiveis = new ArrayList<>();
-                
-        for (int i=0;i < colecoesPalavras.size(); i++)
+        ArrayList<ArrayList<Integer>> copia = new ArrayList<>();
+        for (ArrayList<Integer> plano : listaDeSetCombinacoes)
         {
-            ArrayList<String> tmpStringArray = colecoesPalavras.get(i);
-            int length = tmpStringArray.get(0).length();
-            mapaListasPalavrasEmArray.put(length, i);
-            comprimentosDisponiveis.add(length);
+            copia.add(new ArrayList<>(plano));
         }
-        
-        combina(comprimentosDisponiveis, comprimentoExpressao);
+        return copia;
     }
 
-    public ArrayList<ArrayList> getListaDeSetCombinacoes()
-    {
-        return listaDeSetCombinacoes;
-    }
-
+    /**
+     * Retorna a associação entre comprimento e posição da coleção.
+     *
+     * @return cópia independente do mapa interno
+     */
     public HashMap<Integer, Integer> getMapaListasPalavrasEmArray()
     {
-        return mapaListasPalavrasEmArray;
+        return new HashMap<>(mapaListasPalavrasEmArray);
     }
-    
-    
 }

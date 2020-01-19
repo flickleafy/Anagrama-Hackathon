@@ -2,119 +2,96 @@
  * Copyright (C) 2019 Enzo Erbano
  *
  * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- *  
- * You are free to:
- * 
- * Share - copy and redistribute the material in any medium or format
- * Adapt - remix, transform, and build upon the material
- * 
- * Under the following terms:
- * 
- * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
- * changes were made. You may do so in any reasonable manner, but not in any way that
- * suggests the licensor endorses you or your use.
- * NonCommercial - You may not use the material for commercial purposes.
- * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
- * contributions under the same license as the original.
- * No additional restrictions - You may not apply legal terms or technological measures that
- * legally restrict others from doing anything the license permits.
- * 
  */
-
 package controle.multithread;
 
-import controle.singlethread.SetCombinacoes;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
+ * Executa de forma limitada as tarefas dos estágios paralelos.
  *
- * @author Enzo Erbano 
+ * @author Enzo Erbano
  */
-
-public class ExecucaoMultiThread
+public final class ExecucaoMultiThread
 {
-
-    static void executarMultiFiltro(ArrayList<ArrayList> colecoesListas, String stringEntrada, int numeroDeThreads)
+    private ExecucaoMultiThread()
     {
-        ArrayList<Thread> threadsArray = new ArrayList<>();
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            Thread thread = new Thread(new MultiFiltro(colecoesListas.get(i), stringEntrada));
-            threadsArray.add(thread);
-            thread.start();
-        }
-        juntarThreads(threadsArray);
-    }
-    
-    static void executarMultiCombinacoes(ArrayList<String> listaPalavrasCombinadas,ArrayList<ArrayList> colecoesListas, String stringEntrada,SetCombinacoes setCombinacoesManopla,ArrayList<ArrayList> colecoesDeSets ,int numeroDeThreads)
-    {
-        ArrayList<ArrayList> listasPalavrasPorThread = new ArrayList<>();
-        ArrayList<Thread> threadsArray = new ArrayList<>();
-        
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            ArrayList<String> listaPalavrasComb = new ArrayList<>();
-            Thread thread = new Thread(new MultiCombinador(listaPalavrasComb,colecoesListas, stringEntrada,setCombinacoesManopla, colecoesDeSets.get(i)));
-            threadsArray.add(thread);
-            thread.start();
-            listasPalavrasPorThread.add(listaPalavrasComb);
-        }
-        
-        juntarThreads(threadsArray);
-        
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            listaPalavrasCombinadas.addAll(listasPalavrasPorThread.get(i));
-        }
-        System.out.println("\nTotal de combinações " + listaPalavrasCombinadas.size());
-    }    
-    
-    static void executarMultiValidacao(ArrayList<ArrayList> colecoesListas, String stringEntrada, int numeroDeThreads)
-    {
-        ArrayList<Thread> threadsArray = new ArrayList<>();
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            Thread thread = new Thread(new MultiValidacao(colecoesListas.get(i), stringEntrada));
-            threadsArray.add(thread);
-            thread.start();
-        }
-        juntarThreads(threadsArray);
     }
 
-    
-
-    
-    // métodos de controle de Threads
-    private static void juntarThreads(ArrayList<Thread> threadsArray)
+    /**
+     * Executa tarefas e devolve os resultados na ordem em que foram recebidas.
+     *
+     * <p>Uma interrupção restaura o estado da thread chamadora. Falhas das
+     * tarefas são propagadas para impedir resultados parciais silenciosos.</p>
+     *
+     * @param tarefas trabalhos independentes que serão executados
+     * @param <T> tipo produzido por cada tarefa
+     * @return resultados na mesma ordem da lista de tarefas
+     */
+    static <T> ArrayList<T> executar(List<? extends Callable<T>> tarefas)
     {
-        // todas as threads vão executar em paralelo, enquanto o thread principal espera
-        for (Thread thread : threadsArray)
+        ArrayList<T> resultados = new ArrayList<>();
+        if (tarefas.isEmpty())
         {
-            try
+            return resultados;
+        }
+
+        int quantidadeThreads = definirNumeroDeThreads(tarefas.size());
+        ExecutorService executor = Executors.newFixedThreadPool(quantidadeThreads);
+        try
+        {
+            // invokeAll preserva a ordem dos Future, mesmo que as tarefas
+            // terminem fora de ordem, mantendo o resultado determinístico.
+            List<Future<T>> futuros = executor.invokeAll(tarefas);
+            for (Future<T> futuro : futuros)
             {
-                thread.join();
+                resultados.add(futuro.get());
             }
-            catch (InterruptedException e)
-            {
-            }
+            return resultados;
         }
-    }
-    
-    public static int definirNumeroDeThreads(int tamanhoArrayList)
-    {
-        int numeroDeThreads = Runtime.getRuntime().availableProcessors();
-        if (tamanhoArrayList < numeroDeThreads*2)
+        catch (InterruptedException e)
         {
-            numeroDeThreads = tamanhoArrayList;
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("A execução paralela foi interrompida", e);
         }
-        //else if (tamanhoArrayList < numeroDeThreads*2 )
-        //{
-            //numeroDeThreads = tamanhoArrayList/2;
-        //}
-        return numeroDeThreads;
+        catch (ExecutionException e)
+        {
+            Throwable causa = e.getCause();
+            if (causa instanceof RuntimeException)
+            {
+                throw (RuntimeException) causa;
+            }
+            throw new IllegalStateException("Falha em uma tarefa paralela", causa);
+        }
+        finally
+        {
+            // Em caminhos de falha, interrompe qualquer tarefa remanescente;
+            // no caminho normal, todos os Future já foram concluídos.
+            executor.shutdownNow();
+        }
     }
 
-    
-
-    
+    /**
+     * Calcula o número máximo de threads úteis para uma carga.
+     *
+     * @param tamanhoLista quantidade de unidades independentes de trabalho
+     * @return zero para carga vazia; caso contrário, o menor valor entre a
+     *         carga e os processadores disponíveis
+     */
+    public static int definirNumeroDeThreads(int tamanhoLista)
+    {
+        if (tamanhoLista <= 0)
+        {
+            return 0;
+        }
+        return Math.min(
+                Runtime.getRuntime().availableProcessors(),
+                tamanhoLista);
+    }
 }

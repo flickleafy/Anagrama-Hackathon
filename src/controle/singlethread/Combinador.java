@@ -2,83 +2,85 @@
  * Copyright (C) 2019 Enzo Erbano
  *
  * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- *  
- * You are free to:
- * 
- * Share - copy and redistribute the material in any medium or format
- * Adapt - remix, transform, and build upon the material
- * 
- * Under the following terms:
- * 
- * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
- * changes were made. You may do so in any reasonable manner, but not in any way that
- * suggests the licensor endorses you or your use.
- * NonCommercial - You may not use the material for commercial purposes.
- * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
- * contributions under the same license as the original.
- * No additional restrictions - You may not apply legal terms or technological measures that
- * legally restrict others from doing anything the license permits.
- * 
  */
-
 package controle.singlethread;
 
+import controle.CombinacaoPlanos;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
+ * Combina palavras sequencialmente a partir dos planos de comprimento.
  *
- * @author Enzo Erbano 
+ * @author Enzo Erbano
  */
-
-public class Combinador
+public final class Combinador
 {
-
-    public static void combinadorPalavras(ArrayList<String> listaPalavrasCombinadas,ArrayList<ArrayList> colecoesPalavras, String stringEntrada, SetCombinacoes setCombinacoesManopla)
+    private Combinador()
     {
-        ArrayList<ArrayList> listaDeSetCombinacoes = setCombinacoesManopla.getListaDeSetCombinacoes();        
-        HashMap<Integer, Integer> mapaListasPalavrasEmArray = setCombinacoesManopla.getMapaListasPalavrasEmArray();
-        
-        //ArrayList<String> listaPalavrasCombinadas = new ArrayList<>();
-        
-        for (int i = 0; i < listaDeSetCombinacoes.size(); i++)
-        {
-            ArrayList<Integer> setCombinacoes = listaDeSetCombinacoes.get(i);
-            
-            listaPalavrasCombinadas.addAll( combinadorRecursivo(colecoesPalavras, setCombinacoes, mapaListasPalavrasEmArray) );
-            
-        }
-        System.out.println("Total de combinações " + listaPalavrasCombinadas.size());
-        
     }
 
-    
-    private static ArrayList<String> combinadorRecursivo(ArrayList<ArrayList> colecoesPalavras, ArrayList<Integer> setCombinacoes, HashMap<Integer, Integer> mapaListasPalavrasEmArray) 
+    /**
+     * Acrescenta ao destino todas as combinações descritas pelos planos.
+     *
+     * <p>O parâmetro {@code stringEntrada} é mantido por compatibilidade com a
+     * API original; o comprimento-alvo já está representado nos planos.</p>
+     *
+     * @param listaPalavrasCombinadas destino que receberá os resultados
+     * @param colecoesPalavras palavras agrupadas por comprimento
+     * @param stringEntrada expressão-alvo mantida por compatibilidade
+     * @param setCombinacoesManopla planos e mapa das coleções
+     */
+    public static void combinadorPalavras(
+            ArrayList<String> listaPalavrasCombinadas,
+            ArrayList<ArrayList<String>> colecoesPalavras,
+            String stringEntrada,
+            SetCombinacoes setCombinacoesManopla)
     {
-        ArrayList<String> listaPalavrasCombinadas = new ArrayList<>();
-        
-        int tamanhoPalavra = setCombinacoes.get(0);
-        int posicaoRealLista = mapaListasPalavrasEmArray.get(tamanhoPalavra);
-        ArrayList<String> tmpListaPalavras1 = colecoesPalavras.get(posicaoRealLista);
+        combinarPlanos(
+                listaPalavrasCombinadas,
+                colecoesPalavras,
+                setCombinacoesManopla.getListaDeSetCombinacoes(),
+                setCombinacoesManopla.getMapaListasPalavrasEmArray());
+    }
 
-        if(setCombinacoes.size() > 1)
-        {            
-            setCombinacoes.remove(0);
-            
-            ArrayList<String> tmpListaPalavras2 = combinadorRecursivo(colecoesPalavras,setCombinacoes,mapaListasPalavrasEmArray);
-            for (int i = 0; i < tmpListaPalavras1.size(); i++)
-            {
-                for (int j = 0; j < tmpListaPalavras2.size(); j++)
+    /**
+     * Combina somente a partição de planos informada.
+     *
+     * <p>Este limite permite que as versões sequencial e multithread reutilizem
+     * exatamente a mesma regra de enumeração canônica.</p>
+     *
+     * @param listaPalavrasCombinadas destino que será acrescido
+     * @param colecoesPalavras palavras agrupadas por comprimento
+     * @param planos partição de planos a percorrer
+     * @param mapaColecoes associa comprimentos aos índices das coleções
+     */
+    public static void combinarPlanos(
+            final ArrayList<String> listaPalavrasCombinadas,
+            final ArrayList<ArrayList<String>> colecoesPalavras,
+            List<? extends List<Integer>> planos,
+            final HashMap<Integer, Integer> mapaColecoes)
+    {
+        CombinacaoPlanos.visitar(
+                planos,
+                colecoesPalavras,
+                mapaColecoes,
+                new CombinacaoPlanos.Visitante()
                 {
-                    listaPalavrasCombinadas.add(tmpListaPalavras1.get(i) + tmpListaPalavras2.get(j) );
-                }
-            }            
-        }
-        else
-        {
-            return tmpListaPalavras1;         
-        }
-        return listaPalavrasCombinadas;
+                    @Override
+                    public void aceitar(List<Integer> plano, int[] indicesPalavras)
+                    {
+                        StringBuilder combinacao = new StringBuilder();
+                        for (int i = 0; i < plano.size(); i++)
+                        {
+                            int indiceColecao = mapaColecoes.get(plano.get(i));
+                            combinacao.append(
+                                    colecoesPalavras.get(indiceColecao)
+                                            .get(indicesPalavras[i]));
+                        }
+                        listaPalavrasCombinadas.add(combinacao.toString());
+                    }
+                });
     }
-    
 }

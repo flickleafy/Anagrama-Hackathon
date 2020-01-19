@@ -1,0 +1,15 @@
+version: "2.4"
+
+services:
+  anagrama-cpu:
+    image: anagrama:java8-ant1.10.7
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: cpu
+    environment:
+      ANAGRAMA_VARIANTE: cpu
+      ANAGRAMA_EXIGIR_AMBIENTE_ALVO: "${ANAGRAMA_EXIGIR_AMBIENTE_ALVO:-0}"
+    stdin_open: true
+    tty: true

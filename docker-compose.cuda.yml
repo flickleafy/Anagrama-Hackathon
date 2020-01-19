@@ -1,0 +1,18 @@
+version: "2.4"
+
+services:
+  anagrama-cuda:
+    image: anagrama:cuda10.1-java8-ant1.10.7
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: cuda
+    runtime: nvidia
+    environment:
+      ANAGRAMA_VARIANTE: cuda
+      ANAGRAMA_EXIGIR_AMBIENTE_ALVO: "${ANAGRAMA_EXIGIR_AMBIENTE_ALVO:-0}"
+      NVIDIA_VISIBLE_DEVICES: "${NVIDIA_VISIBLE_DEVICES:-all}"
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    stdin_open: true
+    tty: true

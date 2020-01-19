@@ -1,0 +1,12 @@
+build
+dist
+lib
+!lib/
+lib/*
+!lib/cuda/
+lib/cuda/*
+!lib/cuda/jcuda-natives-10.1.0-linux-x86_64.jar
+nppBackup
+build.xml
+manifest.mf
+.vscode

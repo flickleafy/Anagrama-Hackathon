@@ -1,0 +1,14 @@
+.git
+.github
+.vscode
+build
+dist
+nbproject/private
+nppBackup
+
+lib/cuda/*
+!lib/cuda/jcuda-10.1.0.jar
+!lib/cuda/jcuda-common-10.1.0.jar
+!lib/cuda/jcuda-natives-10.1.0-apple-x86_64.jar
+!lib/cuda/jcuda-natives-10.1.0-linux-x86_64.jar
+!lib/cuda/jcuda-natives-10.1.0-windows-x86_64.jar

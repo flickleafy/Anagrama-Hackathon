@@ -2,98 +2,60 @@
  * Copyright (C) 2019 Enzo Erbano
  *
  * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- *  
- * You are free to:
- * 
- * Share - copy and redistribute the material in any medium or format
- * Adapt - remix, transform, and build upon the material
- * 
- * Under the following terms:
- * 
- * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
- * changes were made. You may do so in any reasonable manner, but not in any way that
- * suggests the licensor endorses you or your use.
- * NonCommercial - You may not use the material for commercial purposes.
- * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
- * contributions under the same license as the original.
- * No additional restrictions - You may not apply legal terms or technological measures that
- * legally restrict others from doing anything the license permits.
- * 
  */
-
 package controle.multithread;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Cria partições balanceadas e independentes para as threads de trabalho.
  *
- * @author Enzo Erbano 
+ * @author Enzo Erbano
  */
-
-public class ListasParaThreads
+final class ListasParaThreads
 {
-
-    static void unirListas(ArrayList<String> listaPalavras, ArrayList<ArrayList> colecoesListas, int numeroDeThreads)
+    private ListasParaThreads()
     {
-        listaPalavras.clear();
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            listaPalavras.addAll(colecoesListas.get(i));
-        }
     }
 
-    // métodos de divisão de listas em pedaços iguais a quantidade de Threads
-    static void dividirLista(ArrayList<String> listaPalavras, ArrayList<ArrayList> colecoesListas, int numeroDeThreads)
+    /**
+     * Divide uma lista em cópias contíguas com diferença máxima de um item.
+     *
+     * <p>A quantidade efetiva nunca ultrapassa o número de itens; por isso uma
+     * entrada vazia não produz partições nem threads sem trabalho.</p>
+     *
+     * @param itens elementos que serão distribuídos
+     * @param quantidadePartes limite de partições desejado
+     * @param <T> tipo dos elementos
+     * @return partições independentes na mesma ordem da lista original
+     * @throws IllegalArgumentException se a lista for nula
+     */
+    static <T> ArrayList<ArrayList<T>> dividirLista(
+            List<T> itens, int quantidadePartes)
     {
-        int pedaco = listaPalavras.size() / numeroDeThreads;
-        int indiceinicial = 0;
-        int indicefinal = pedaco;
-        for (int i = 0; i < numeroDeThreads; i++)
+        ArrayList<ArrayList<T>> partes = new ArrayList<>();
+        if (itens == null)
         {
-            ArrayList<String> tmp;
-            if (i == numeroDeThreads - 1)
-            {
-                tmp = new ArrayList<>(listaPalavras.subList(indiceinicial, listaPalavras.size()));
-            }
-            else
-            {
-                tmp = new ArrayList<>(listaPalavras.subList(indiceinicial, indicefinal));
-            }
-            indiceinicial = indicefinal;
-            indicefinal = indicefinal + pedaco;
-            colecoesListas.add(tmp);
+            throw new IllegalArgumentException("A lista não pode ser nula");
         }
+        if (itens.isEmpty())
+        {
+            return partes;
+        }
+
+        int numeroPartes = Math.max(1, Math.min(quantidadePartes, itens.size()));
+        int tamanhoBase = itens.size() / numeroPartes;
+        int restantes = itens.size() % numeroPartes;
+        int inicio = 0;
+
+        for (int i = 0; i < numeroPartes; i++)
+        {
+            int tamanho = tamanhoBase + (i < restantes ? 1 : 0);
+            int fim = inicio + tamanho;
+            partes.add(new ArrayList<>(itens.subList(inicio, fim)));
+            inicio = fim;
+        }
+        return partes;
     }
-    
-    
-    static void dividirListaSetCombinacoes(ArrayList<ArrayList> listaSetCombinacoes, ArrayList<ArrayList> colecoesDeSets, int numeroDeThreads)
-    {
-        int pedaco = listaSetCombinacoes.size() / numeroDeThreads;
-        int indiceinicial = 0;
-        int indicefinal = pedaco;
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            ArrayList<ArrayList> tmp;
-            if (i == numeroDeThreads - 1)
-            {
-                tmp = new ArrayList<>(listaSetCombinacoes.subList(indiceinicial, listaSetCombinacoes.size()));
-            }
-            else
-            {
-                tmp = new ArrayList<>(listaSetCombinacoes.subList(indiceinicial, indicefinal));
-            }
-            indiceinicial = indicefinal;
-            indicefinal = indicefinal + pedaco;
-            colecoesDeSets.add(tmp);
-        }
-    }
-    
-    /*static void unirColecoes(ArrayList<ArrayList> listasPalavras, ArrayList<ArrayList> colecoesListas, int numeroDeThreads)
-    {
-        listasPalavras.clear();
-        for (int i = 0; i < numeroDeThreads; i++)
-        {
-            listasPalavras.addAll(colecoesListas.get(i));
-        }
-    }*/
 }

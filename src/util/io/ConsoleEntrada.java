@@ -2,56 +2,62 @@
  * Copyright (C) 2019 Enzo Erbano
  *
  * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- *  
- * You are free to:
- * 
- * Share - copy and redistribute the material in any medium or format
- * Adapt - remix, transform, and build upon the material
- * 
- * Under the following terms:
- * 
- * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
- * changes were made. You may do so in any reasonable manner, but not in any way that
- * suggests the licensor endorses you or your use.
- * NonCommercial - You may not use the material for commercial purposes.
- * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
- * contributions under the same license as the original.
- * No additional restrictions - You may not apply legal terms or technological measures that
- * legally restrict others from doing anything the license permits.
- * 
  */
-
 package util.io;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
+ * Leitor de linhas do console com codificação UTF-8.
  *
  * @author Enzo Erbano
  */
-
-public class ConsoleEntrada
+public final class ConsoleEntrada implements AutoCloseable
 {
-    Scanner scanner;
+    private final Scanner scanner;
 
+    /** Cria um leitor associado à entrada padrão do processo. */
     public ConsoleEntrada()
     {
-        inicializar();
+        this(System.in);
     }
 
-    private void inicializar()
+    /**
+     * Cria um leitor sobre um fluxo fornecido pelo chamador.
+     *
+     * @param inputStream fluxo que será consumido e fechado junto com o leitor
+     * @throws IllegalArgumentException se o fluxo for nulo
+     */
+    public ConsoleEntrada(InputStream inputStream)
     {
-        scanner = new Scanner(System.in);
+        if (inputStream == null)
+        {
+            throw new IllegalArgumentException("O stream de entrada não pode ser nulo");
+        }
+        scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
     }
 
-    public void destruir()
-    {
-        scanner.close();
-    }
-    
+    /**
+     * Lê a próxima linha completa.
+     *
+     * @return linha sem o separador de fim de linha
+     */
     public String lerConsoleUmaLinha()
     {
-        String inputString = scanner.nextLine();
-        return inputString;
+        return scanner.nextLine();
+    }
+
+    /** Fecha o leitor, mantendo compatibilidade com a API original. */
+    public void destruir()
+    {
+        close();
+    }
+
+    @Override
+    public void close()
+    {
+        scanner.close();
     }
 }

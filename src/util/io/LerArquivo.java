@@ -2,68 +2,39 @@
  * Copyright (C) 2019 Enzo Erbano
  *
  * Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- *  
- * You are free to:
- * 
- * Share - copy and redistribute the material in any medium or format
- * Adapt - remix, transform, and build upon the material
- * 
- * Under the following terms:
- * 
- * Attribution - You must give appropriate credit, provide a link to the license, and indicate if
- * changes were made. You may do so in any reasonable manner, but not in any way that
- * suggests the licensor endorses you or your use.
- * NonCommercial - You may not use the material for commercial purposes.
- * ShareAlike - If you remix, transform, or build upon the material, you must distribute your
- * contributions under the same license as the original.
- * No additional restrictions - You may not apply legal terms or technological measures that
- * legally restrict others from doing anything the license permits.
- * 
  */
-
 package util.io;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 /**
+ * Abre um dicionário armazenado no sistema de arquivos.
  *
  * @author Enzo Erbano
  */
-
-import java.io.*;
-import java.lang.String;
-import java.util.ArrayList;
-
-import java.util.Vector;
-
-public class LerArquivo
+public final class LerArquivo
 {
-    public ArrayList<String> lerArquivoLinhaPorLinha(String filename)
+    /**
+     * Abre um arquivo para leitura.
+     *
+     * <p>Em caso de falha, registra a mensagem no fluxo de erro e retorna
+     * {@code null} para preservar o contrato da aplicação.</p>
+     *
+     * @param nomeArquivo caminho do arquivo desejado
+     * @return fluxo aberto, ou {@code null} quando o arquivo não existe
+     */
+    public InputStream lerArquivo(String nomeArquivo)
     {
-        ArrayList<String> listaString = new ArrayList<String>();
-        
         try
-        {   // Open the file that is the first
-            // command line parameter
-            FileInputStream arquivoInpStream = new FileInputStream(filename);
-
-            // Pegar referencia de objeto de DataInputStream
-            DataInputStream dadosInpStream = new DataInputStream(arquivoInpStream);
-
-            BufferedReader buffReader = new BufferedReader(new InputStreamReader(dadosInpStream));
-
-            String strLinha;
-
-            //Ler arquivo linha por linha
-            while ((strLinha = buffReader.readLine()) != null)
-            {        
-                listaString.add(strLinha);
-            }
-            //Fechar stream de entrada
-            dadosInpStream.close();
+        {
+            return new FileInputStream(nomeArquivo);
         }
-        catch (Exception e)
-        {   //Pegar e imprimir exceção se aparecer
+        catch (FileNotFoundException e)
+        {
             System.err.println("Erro: " + e.getMessage());
+            return null;
         }
-        return listaString;
     }
 }
